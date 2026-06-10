@@ -262,7 +262,7 @@ flowchart TD
         CD2["CI Pass\nGitHub Actions ✓"]:::deployNode
         CD3["Auto Deploy\nHeroku dyno"]:::deployNode
         CD4["uvicorn main:app\n--port \$PORT"]:::deployNode
-        CD5(["Live API\nhttps://app.herokuapp.com"]):::deployNode
+        CD5(["Live API\nhttps://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com"]):::deployNode
     end
 
     %% ── FRONTEND ─────────────────────────────────────────────────────────────
@@ -798,7 +798,7 @@ heroku config:set SECRET_KEY=$(openssl rand -hex 32)
 git push origin main
 
 # 5. Verify
-curl https://mlops-census-eaamankwah-NAME.herokuapp.com/
+curl https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/
 # {"message": "Welcome to the Census Income Prediction API!"}
 
 # 6. Live API test
