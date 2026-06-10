@@ -54,6 +54,7 @@ def _load_artifacts() -> None:
     with open(LB_PATH, "rb") as f:
         lb = pickle.load(f)
 
+
 CAT_FEATURES = [
     "workclass",
     "education",
