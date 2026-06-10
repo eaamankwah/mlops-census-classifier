@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Pytest / Coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Fairness analysis outputs (generated — not committed)
+fairness/*.png
+fairness/*.csv
+# Keep fairness_summary.json so results are versioned:
+# fairness/fairness_summary.json  <-- intentionally tracked
+
+# Model artifacts — DO commit these (Heroku needs them at startup)
+# model/*.pkl  <-- do NOT ignore

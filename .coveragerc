@@ -1,0 +1,14 @@
+[run]
+omit =
+    setup.py
+    live_post.py
+    starter/train_model.py
+    starter/fairness_analysis.py
+    .venv/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if "DYNO" in os.environ
+    exit\(
+    raise NotImplementedError

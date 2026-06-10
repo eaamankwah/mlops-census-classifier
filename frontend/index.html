@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Census Income Predictor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design tokens — Light theme ────────────────────────────────── */
+    :root {
+      --bg:        #f5f7fa;
+      --surface:   #ffffff;
+      --border:    #dde2ea;
+      --border-hi: #c4ccd8;
+      --text:      #1a1f2e;
+      --muted:     #6b7590;
+      --accent:    #1d6ef5;
+      --accent-dk: #1558d6;
+      --accent-lt: #e8f0fe;
+      --danger:    #d93025;
+      --warn:      #c07c00;
+      --warn-bg:   #fef7e0;
+      --success:   #1e7e44;
+      --success-bg:#e6f4ea;
+      --mono:      "DM Mono", monospace;
+      --sans:      "Syne", sans-serif;
+      --radius:    8px;
+      --shadow:    0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.04);
+      --shadow-md: 0 2px 8px rgba(0,0,0,.10), 0 8px 24px rgba(0,0,0,.06);
+      --transition: 160ms ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Subtle dot grid background ────────────────────────────────── */
+    .grid-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: radial-gradient(circle, #c4ccd8 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: .45;
+    }
+
+    /* ── Top accent bar ────────────────────────────────────────────── */
+    body::before {
+      content: "";
+      position: fixed; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), #7c3aed, #0ea5e9);
+      z-index: 100;
+    }
+
+    /* ── Layout ────────────────────────────────────────────────────── */
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Header ────────────────────────────────────────────────────── */
+    header {
+      padding: 52px 0 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 36px;
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+      color: var(--accent); text-transform: uppercase;
+      background: var(--accent-lt);
+      border: 1px solid #b6d0fb; border-radius: 999px;
+      padding: 3px 10px; margin-bottom: 18px;
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+      animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%,100% { opacity: 1; } 50% { opacity: .4; }
+    }
+
+    h1 {
+      font-size: clamp(26px, 5vw, 44px);
+      font-weight: 800; letter-spacing: -.02em; line-height: 1.1;
+      margin-bottom: 10px; color: #0f1623;
+    }
+    h1 span { color: var(--accent); }
+
+    .subtitle {
+      color: var(--muted); font-size: 13px; font-family: var(--mono);
+      font-weight: 300; letter-spacing: .02em;
+    }
+
+    /* ── API config bar ────────────────────────────────────────────── */
+    .config-bar {
+      display: flex; gap: 10px; align-items: flex-end;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px 20px;
+      margin-bottom: 28px; box-shadow: var(--shadow);
+    }
+    .config-bar .field { flex: 1; }
+    .config-bar label { font-size: 11px; font-family: var(--mono); color: var(--muted);
+      text-transform: uppercase; letter-spacing: .1em; display: block; margin-bottom: 6px; }
+    .config-bar input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text); font-family: var(--mono);
+      font-size: 12px; padding: 8px 12px; outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .config-bar input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(29,110,245,.12);
+    }
+
+    /* ── Cards ─────────────────────────────────────────────────────── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px 28px 24px;
+      margin-bottom: 20px; box-shadow: var(--shadow);
+    }
+    .card-title {
+      font-size: 11px; font-family: var(--mono); color: var(--muted);
+      text-transform: uppercase; letter-spacing: .14em; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title::after {
+      content: ""; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── Form grid ─────────────────────────────────────────────────── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 14px;
+    }
+    .form-grid .full { grid-column: 1 / -1; }
+
+    .field label {
+      display: block; font-size: 11px; font-family: var(--mono);
+      color: var(--muted); text-transform: uppercase; letter-spacing: .1em;
+      margin-bottom: 5px;
+    }
+    .field input, .field select {
+      width: 100%; background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      color: var(--text); font-family: var(--mono); font-size: 13px;
+      padding: 9px 12px; outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      -webkit-appearance: none;
+    }
+    .field input:focus, .field select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(29,110,245,.10);
+      background: #fafcff;
+    }
+    .field select option { background: var(--surface); color: var(--text); }
+
+    /* ── Buttons ───────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 12px; letter-spacing: .08em;
+      text-transform: uppercase; cursor: pointer;
+      border-radius: var(--radius); border: none; padding: 10px 20px;
+      transition: all var(--transition); white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--accent); color: #ffffff; font-weight: 500;
+      box-shadow: 0 1px 4px rgba(29,110,245,.30);
+    }
+    .btn-primary:hover {
+      background: var(--accent-dk); transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(29,110,245,.35);
+    }
+    .btn-primary:active { transform: translateY(0); box-shadow: none; }
+    .btn-primary:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .btn-ghost {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent); color: var(--accent);
+      background: var(--accent-lt);
+    }
+
+    .btn-row {
+      display: flex; gap: 10px; align-items: center;
+      margin-top: 20px; flex-wrap: wrap;
+    }
+
+    /* ── Auth status ───────────────────────────────────────────────── */
+    #auth-status {
+      font-family: var(--mono); font-size: 12px; padding: 8px 14px;
+      border-radius: var(--radius); display: none;
+    }
+    #auth-status.ok  {
+      background: var(--success-bg); border: 1px solid #a8d5b5;
+      color: var(--success);
+    }
+    #auth-status.err {
+      background: #fce8e6; border: 1px solid #f5b8b4;
+      color: var(--danger);
+    }
+
+    /* ── Result panel ──────────────────────────────────────────────── */
+    #result-panel {
+      display: none; margin-top: 24px;
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    #result-panel.visible { display: block; animation: fadeUp .3s ease; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-header {
+      padding: 14px 20px; font-size: 11px; font-family: var(--mono);
+      text-transform: uppercase; letter-spacing: .12em;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .result-header.above {
+      background: var(--success-bg); border: 1px solid #a8d5b5;
+      border-bottom: none; color: var(--success);
+    }
+    .result-header.below {
+      background: var(--warn-bg); border: 1px solid #f0c96a;
+      border-bottom: none; color: var(--warn);
+    }
+    .result-header.error-h {
+      background: #fce8e6; border: 1px solid #f5b8b4;
+      border-bottom: none; color: var(--danger);
+    }
+
+    .result-body {
+      background: var(--surface);
+      border: 1px solid var(--border); border-top: none;
+      padding: 20px 24px;
+    }
+    .result-big {
+      font-size: 32px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 6px;
+    }
+    .result-big.above { color: var(--success); }
+    .result-big.below { color: var(--warn); }
+    .result-meta {
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+    }
+
+    /* ── Raw JSON drawer ────────────────────────────────────────────── */
+    details { margin-top: 16px; }
+    summary {
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+      cursor: pointer; text-transform: uppercase; letter-spacing: .1em;
+      list-style: none; display: flex; align-items: center; gap: 6px;
+    }
+    summary::before { content: "▶"; font-size: 8px; transition: transform .15s; }
+    details[open] summary::before { transform: rotate(90deg); }
+    summary:hover { color: var(--text); }
+    pre {
+      margin-top: 10px; background: #f8f9fb; border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px 16px;
+      font-family: var(--mono); font-size: 12px; color: #3d4966;
+      overflow-x: auto; line-height: 1.6;
+    }
+
+    /* ── Spinner ───────────────────────────────────────────────────── */
+    .spin {
+      width: 14px; height: 14px; border: 2px solid transparent;
+      border-top-color: currentColor; border-radius: 50%;
+      animation: spin .6s linear infinite; display: none;
+    }
+    .loading .spin { display: inline-block; }
+    .loading .btn-label { display: none; }
+
+    /* ── Footer ────────────────────────────────────────────────────── */
+    footer {
+      text-align: center; padding-top: 40px;
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+      border-top: 1px solid var(--border); letter-spacing: .06em;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<div class="wrap">
+  <!-- Header -->
+  <header>
+    <div class="badge"><span class="badge-dot"></span>ML API v2.0</div>
+    <h1>Census Income<br><span>Predictor</span></h1>
+    <p class="subtitle">// US Census Bureau · Random Forest Classifier · FastAPI + JWT</p>
+  </header>
+
+  <!-- API URL config -->
+  <div class="config-bar">
+    <div class="field">
+      <label>API Base URL</label>
+      <input id="api-url" type="text" value="http://127.0.0.1:8000" placeholder="https://your-app.herokuapp.com" />
+    </div>
+  </div>
+
+  <!-- Step 1: Authenticate -->
+  <div class="card">
+    <div class="card-title">01 · Authenticate</div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Username</label>
+        <input id="username" type="text" value="alice" placeholder="alice" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input id="password" type="password" value="secret" placeholder="secret" />
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="login-btn" onclick="doLogin()">
+        <span class="spin"></span>
+        <span class="btn-label">Get Token</span>
+      </button>
+      <span id="auth-status"></span>
+    </div>
+  </div>
+
+  <!-- Step 2: Predict -->
+  <div class="card">
+    <div class="card-title">02 · Census Record</div>
+    <div class="form-grid">
+
+      <div class="field">
+        <label>Age</label>
+        <input id="age" type="number" value="39" min="17" max="90" />
+      </div>
+
+      <div class="field">
+        <label>Workclass</label>
+        <select id="workclass">
+          <option>Private</option>
+          <option selected>State-gov</option>
+          <option>Self-emp-not-inc</option>
+          <option>Self-emp-inc</option>
+          <option>Federal-gov</option>
+          <option>Local-gov</option>
+          <option>Without-pay</option>
+          <option>Never-worked</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>fnlgt</label>
+        <input id="fnlgt" type="number" value="77516" />
+      </div>
+
+      <div class="field">
+        <label>Education</label>
+        <select id="education">
+          <option>Preschool</option>
+          <option>1st-4th</option>
+          <option>5th-6th</option>
+          <option>7th-8th</option>
+          <option>9th</option>
+          <option>10th</option>
+          <option>11th</option>
+          <option>12th</option>
+          <option>HS-grad</option>
+          <option>Some-college</option>
+          <option>Assoc-voc</option>
+          <option>Assoc-acdm</option>
+          <option selected>Bachelors</option>
+          <option>Masters</option>
+          <option>Prof-school</option>
+          <option>Doctorate</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Education Num</label>
+        <input id="education-num" type="number" value="13" min="1" max="16" />
+      </div>
+
+      <div class="field">
+        <label>Marital Status</label>
+        <select id="marital-status">
+          <option selected>Never-married</option>
+          <option>Married-civ-spouse</option>
+          <option>Divorced</option>
+          <option>Separated</option>
+          <option>Widowed</option>
+          <option>Married-spouse-absent</option>
+          <option>Married-AF-spouse</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Occupation</label>
+        <select id="occupation">
+          <option selected>Adm-clerical</option>
+          <option>Exec-managerial</option>
+          <option>Handlers-cleaners</option>
+          <option>Prof-specialty</option>
+          <option>Other-service</option>
+          <option>Sales</option>
+          <option>Craft-repair</option>
+          <option>Transport-moving</option>
+          <option>Farming-fishing</option>
+          <option>Machine-op-inspct</option>
+          <option>Tech-support</option>
+          <option>Protective-serv</option>
+          <option>Armed-Forces</option>
+          <option>Priv-house-serv</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Relationship</label>
+        <select id="relationship">
+          <option selected>Not-in-family</option>
+          <option>Husband</option>
+          <option>Wife</option>
+          <option>Own-child</option>
+          <option>Unmarried</option>
+          <option>Other-relative</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Race</label>
+        <select id="race">
+          <option selected>White</option>
+          <option>Black</option>
+          <option>Asian-Pac-Islander</option>
+          <option>Amer-Indian-Eskimo</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Sex</label>
+        <select id="sex">
+          <option selected>Male</option>
+          <option>Female</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Capital Gain</label>
+        <input id="capital-gain" type="number" value="2174" min="0" />
+      </div>
+
+      <div class="field">
+        <label>Capital Loss</label>
+        <input id="capital-loss" type="number" value="0" min="0" />
+      </div>
+
+      <div class="field">
+        <label>Hours / Week</label>
+        <input id="hours-per-week" type="number" value="40" min="1" max="99" />
+      </div>
+
+      <div class="field">
+        <label>Native Country</label>
+        <select id="native-country">
+          <option selected>United-States</option>
+          <option>Mexico</option>
+          <option>Philippines</option>
+          <option>Germany</option>
+          <option>Canada</option>
+          <option>India</option>
+          <option>England</option>
+          <option>Cuba</option>
+          <option>Japan</option>
+          <option>China</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+    </div><!-- /form-grid -->
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="predict-btn" onclick="doPredict()">
+        <span class="spin"></span>
+        <span class="btn-label">Run Inference</span>
+      </button>
+      <button class="btn btn-ghost" onclick="loadSampleAbove()">Load &gt;50K sample</button>
+      <button class="btn btn-ghost" onclick="loadSampleBelow()">Load ≤50K sample</button>
+    </div>
+
+    <!-- Result -->
+    <div id="result-panel">
+      <div class="result-header" id="result-header"></div>
+      <div class="result-body">
+        <div class="result-big" id="result-big"></div>
+        <div class="result-meta" id="result-meta"></div>
+        <details>
+          <summary>raw json</summary>
+          <pre id="result-json"></pre>
+        </details>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+
+  <footer>
+    <p>Udacity MLOps · Project 3 &nbsp;·&nbsp; <a href="/docs" target="_blank">API Docs ↗</a></p>
+  </footer>
+</div>
+
+<script>
+  let jwtToken = null;
+
+  // ── Sample payloads ─────────────────────────────────────────────────────
+  const ABOVE_50K = {
+    age: 52, workclass: "Self-emp-not-inc", fnlgt: 209642,
+    education: "HS-grad", "education-num": 9,
+    "marital-status": "Married-civ-spouse", occupation: "Exec-managerial",
+    relationship: "Husband", race: "White", sex: "Male",
+    "capital-gain": 0, "capital-loss": 0, "hours-per-week": 45,
+    "native-country": "United-States"
+  };
+
+  const BELOW_50K = {
+    age: 25, workclass: "Private", fnlgt: 226956,
+    education: "11th", "education-num": 7,
+    "marital-status": "Never-married", occupation: "Machine-op-inspct",
+    relationship: "Own-child", race: "Black", sex: "Male",
+    "capital-gain": 0, "capital-loss": 0, "hours-per-week": 40,
+    "native-country": "United-States"
+  };
+
+  function loadSampleAbove() { fillForm(ABOVE_50K); }
+  function loadSampleBelow() { fillForm(BELOW_50K); }
+
+  function fillForm(data) {
+    const map = {
+      "education-num": "education-num",
+      "marital-status": "marital-status",
+      "capital-gain": "capital-gain",
+      "capital-loss": "capital-loss",
+      "hours-per-week": "hours-per-week",
+      "native-country": "native-country",
+    };
+    for (const [k, v] of Object.entries(data)) {
+      const id = map[k] || k;
+      const el = document.getElementById(id);
+      if (el) el.value = v;
+    }
+  }
+
+  function getApiBase() {
+    return document.getElementById("api-url").value.replace(/\/$/, "");
+  }
+
+  function setLoading(btnId, on) {
+    const btn = document.getElementById(btnId);
+    btn.classList.toggle("loading", on);
+    btn.disabled = on;
+  }
+
+  // ── Login ────────────────────────────────────────────────────────────────
+  async function doLogin() {
+    setLoading("login-btn", true);
+    const base = getApiBase();
+    const status = document.getElementById("auth-status");
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    const body = new URLSearchParams({ username, password });
+    try {
+      const res = await fetch(`${base}/token`, { method: "POST", body });
+      const data = await res.json();
+      if (res.ok) {
+        jwtToken = data.access_token;
+        status.textContent = `✓ Authenticated as ${username}`;
+        status.className = "ok";
+        status.style.display = "inline-block";
+      } else {
+        jwtToken = null;
+        status.textContent = `✗ ${data.detail || "Authentication failed"}`;
+        status.className = "err";
+        status.style.display = "inline-block";
+      }
+    } catch (e) {
+      status.textContent = `✗ Network error — is the API running at ${base}?`;
+      status.className = "err";
+      status.style.display = "inline-block";
+    }
+    setLoading("login-btn", false);
+  }
+
+  // ── Predict ──────────────────────────────────────────────────────────────
+  async function doPredict() {
+    if (!jwtToken) {
+      alert("Please authenticate first (Step 1).");
+      return;
+    }
+    setLoading("predict-btn", true);
+
+    const base = getApiBase();
+    const payload = {
+      age: +document.getElementById("age").value,
+      workclass: document.getElementById("workclass").value,
+      fnlgt: +document.getElementById("fnlgt").value,
+      education: document.getElementById("education").value,
+      "education-num": +document.getElementById("education-num").value,
+      "marital-status": document.getElementById("marital-status").value,
+      occupation: document.getElementById("occupation").value,
+      relationship: document.getElementById("relationship").value,
+      race: document.getElementById("race").value,
+      sex: document.getElementById("sex").value,
+      "capital-gain": +document.getElementById("capital-gain").value,
+      "capital-loss": +document.getElementById("capital-loss").value,
+      "hours-per-week": +document.getElementById("hours-per-week").value,
+      "native-country": document.getElementById("native-country").value,
+    };
+
+    const panel = document.getElementById("result-panel");
+    const header = document.getElementById("result-header");
+    const big = document.getElementById("result-big");
+    const meta = document.getElementById("result-meta");
+    const jsonEl = document.getElementById("result-json");
+
+    try {
+      const res = await fetch(`${base}/predict`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${jwtToken}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        const above = data.prediction === ">50K";
+        header.textContent = above
+          ? "▲ Prediction: Income above threshold"
+          : "▼ Prediction: Income at or below threshold";
+        header.className = `result-header ${above ? "above" : "below"}`;
+        big.textContent = data.prediction;
+        big.className = `result-big ${above ? "above" : "below"}`;
+        meta.textContent = `predicted_by=${data.predicted_by || "—"}  ·  HTTP ${res.status}`;
+      } else {
+        header.textContent = `Error ${res.status}`;
+        header.className = "result-header error-h";
+        big.textContent = data.detail || "Inference failed";
+        big.className = "result-big";
+        big.style.fontSize = "18px";
+        meta.textContent = "";
+      }
+
+      jsonEl.textContent = JSON.stringify(data, null, 2);
+      panel.className = "result-panel visible";
+
+    } catch (e) {
+      header.textContent = "Network Error";
+      header.className = "result-header error-h";
+      big.textContent = "Could not reach the API";
+      big.className = "result-big";
+      big.style.fontSize = "18px";
+      meta.textContent = e.message;
+      jsonEl.textContent = "";
+      panel.className = "result-panel visible";
+    }
+
+    setLoading("predict-btn", false);
+  }
+
+  // Allow Enter in auth fields
+  ["username","password"].forEach(id => {
+    document.getElementById(id).addEventListener("keydown", e => {
+      if (e.key === "Enter") doLogin();
+    });
+  });
+</script>
+</body>
+</html>

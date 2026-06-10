@@ -1,0 +1,45 @@
+{
+  "original": {
+    "Equal Opportunity Diff": -0.1449187500400958,
+    "Average Odds Diff": -0.10999777104053178,
+    "Disparate Impact": 0.2888203388862537,
+    "Statistical Parity Diff": -0.19226329566466904,
+    "Theil Index": 0.11107289665621561,
+    "f1": 0.6862812179267875,
+    "precision": 0.7418639053254438,
+    "recall": 0.6384468491406747
+  },
+  "reweighting": {
+    "Equal Opportunity Diff": -0.1486556708173753,
+    "Average Odds Diff": -0.11238574394503109,
+    "Disparate Impact": 0.2908518936680536,
+    "Statistical Parity Diff": -0.1938154956671994,
+    "Theil Index": 0.11075578193398918,
+    "f1": 0.6859476012249064,
+    "precision": 0.7368421052631579,
+    "recall": 0.6416295353278166
+  },
+  "counterfactual_sex": {
+    "pct_flipped": 4.13020113618916,
+    "flip_up": 33,
+    "flip_down": 236
+  },
+  "counterfactual_race": {
+    "pct_flipped": 5.773069246123138,
+    "flip_up": 134,
+    "flip_down": 242
+  },
+  "counterfactual_both": {
+    "pct_flipped": 7.047443574389682
+  },
+  "threshold_opt": {
+    "Equal Opportunity Diff": -0.13093336412684364,
+    "Average Odds Diff": -0.10493663895869651,
+    "Disparate Impact": 0.2947856470904448,
+    "Statistical Parity Diff": -0.19466938257886285,
+    "Theil Index": 0.10933814639277073,
+    "f1": 0.6890016920473774,
+    "precision": 0.7355491329479769,
+    "recall": 0.6479949077021006
+  }
+}
