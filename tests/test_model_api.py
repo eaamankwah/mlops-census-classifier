@@ -140,8 +140,6 @@ def test_compute_slice_metrics_structure():
 # ---------------------------------------------------------------------------
 # Data processing unit tests — starter/ml/data.py
 # ---------------------------------------------------------------------------
-from starter.ml.data import process_data
-
 
 def _make_df():
     return pd.DataFrame({
