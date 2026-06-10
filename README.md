@@ -9,12 +9,12 @@
 [![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/downloads/release/python-3130/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.117.1-009688?logo=fastapi)](https://fastapi.tiangolo.com)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.7.2-F7931E?logo=scikit-learn&logoColor=white)](https://scikit-learn.org)
-[![Heroku](https://img.shields.io/badge/deployed-Heroku-430098?logo=heroku)](https://mlops-census-eaamankwah.herokuapp.com)
+[![Heroku](https://img.shields.io/badge/deployed-Heroku-430098?logo=heroku)](https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 *A production-grade MLOps pipeline that trains a Random Forest classifier on the 1994 US Census Bureau Income dataset and serves predictions through a JWT-authenticated FastAPI REST API, deployed on Heroku with full CI/CD automation and 99% test coverage.*
 
-**[Live API →](https://mlops-census-eaamankwah.herokuapp.com)** &nbsp;|&nbsp; **[API Docs →](https://mlops-census-eaamankwah.herokuapp.com/docs)** &nbsp;|&nbsp; **[Web UI →](https://mlops-census-eaamankwah.herokuapp.com/frontend/index.html)**
+**[Live API →](https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com)** &nbsp;|&nbsp; **[API Docs →](https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/docs)** &nbsp;|&nbsp; **[Web UI →](https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/frontend/index.html)**
 
 </div>
 
@@ -64,7 +64,7 @@ The `/predict` and `/users/me` endpoints require JWT authentication. Use these c
 **Three ways to authenticate as a reviewer:**
 
 **Option A — Swagger UI (easiest, no terminal needed):**
-1. Open `https://mlops-census-eaamankwah.herokuapp.com/docs`
+1. Open `https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/docs`
 2. Click **`POST /token`** → **Try it out** → fill `username=alice`, `password=secret` → **Execute**
 3. Copy the `access_token` value from the response
 4. Click the **Authorize 🔒** button at the top of the page → paste the token → **Authorize**
@@ -72,9 +72,9 @@ The `/predict` and `/users/me` endpoints require JWT authentication. Use these c
 
 **Option B — curl:**
 ```bash
-TOKEN=$(curl -s -X POST https://mlops-census-eaamankwah.herokuapp.com/token   -d "username=alice&password=secret"   | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
+TOKEN=$(curl -s -X POST https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/token   -d "username=alice&password=secret"   | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
 
-curl -X POST https://mlops-census-eaamankwah.herokuapp.com/predict   -H "Authorization: Bearer $TOKEN"   -H "Content-Type: application/json"   -d '{"age":39,"workclass":"State-gov","fnlgt":77516,"education":"Bachelors",
+curl -X POST https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/predict   -H "Authorization: Bearer $TOKEN"   -H "Content-Type: application/json"   -d '{"age":39,"workclass":"State-gov","fnlgt":77516,"education":"Bachelors",
        "education-num":13,"marital-status":"Never-married","occupation":"Adm-clerical",
        "relationship":"Not-in-family","race":"White","sex":"Male",
        "capital-gain":2174,"capital-loss":0,"hours-per-week":40,
@@ -556,7 +556,7 @@ Heroku Dyno starts:
   model/ artifacts loaded at startup (committed to Git)
         │
         ▼
-Live API:  https://mlops-census-eaamankwah.herokuapp.com
+Live API:  https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com
 ```
 
 | File | Purpose |
@@ -656,7 +656,7 @@ Full slice metrics for all 8 categorical features are in [`slice_output.txt`](sl
 Public welcome endpoint — no authentication required.
 
 ```bash
-curl https://mlops-census-eaamankwah.herokuapp.com/
+curl https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/
 # {"message": "Welcome to the Census Income Prediction API!"}
 ```
 
@@ -665,7 +665,7 @@ curl https://mlops-census-eaamankwah.herokuapp.com/
 Obtain a JWT Bearer token. Submit credentials as form data.
 
 ```bash
-curl -X POST https://mlops-census-eaamankwah.herokuapp.com/token \
+curl -X POST https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/token \
   -d "username=alice&password=secret"
 # {"access_token": "eyJ...", "token_type": "bearer"}
 ```
@@ -675,7 +675,7 @@ curl -X POST https://mlops-census-eaamankwah.herokuapp.com/token \
 Get the authenticated user's profile.
 
 ```bash
-curl https://mlops-census-eaamankwah.herokuapp.com/users/me \
+curl https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/users/me \
   -H "Authorization: Bearer eyJ..."
 # {"username": "alice", "email": "alice@example.com", "full_name": "Alice Demo", "disabled": false}
 ```
@@ -686,12 +686,12 @@ Run model inference on a census record. **Authentication required.**
 
 ```bash
 # 1. Get token
-TOKEN=$(curl -s -X POST https://mlops-census-eaamankwah.herokuapp.com/token \
+TOKEN=$(curl -s -X POST https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/token \
   -d "username=alice&password=secret" \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
 
 # 2. Call predict
-curl -X POST https://mlops-census-eaamankwah.herokuapp.com/predict \
+curl -X POST https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/predict \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
