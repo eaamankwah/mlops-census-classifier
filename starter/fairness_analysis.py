@@ -234,8 +234,12 @@ def run_fairness_analysis() -> dict:
         if "disparity" in c.lower() and fdf[c].notna().any()
     ][:4]
     if disp_cols:
-        fig, axes = plt.subplots(1, len(disp_cols),
-                                  figsize=(14, 5), squeeze=False)
+        fig, axes = plt.subplots(
+            1,
+            len(disp_cols),
+            figsize=(14, 5),
+            squeeze=False,
+        )
         axes = axes[0]
         for ax, col in zip(axes, disp_cols):
             sub = fdf[fdf["attribute_name"].isin(["sex", "race"])][

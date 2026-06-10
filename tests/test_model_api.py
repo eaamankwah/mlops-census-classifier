@@ -6,6 +6,7 @@ Targets near-100% coverage of:  main.py, starter/ml/model.py,
 Run with:
     pytest tests/ -v --cov=. --cov-report=term-missing
 """
+import json
 import os
 import tempfile
 
@@ -18,6 +19,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
 
 from main import ALGORITHM, SECRET_KEY
+from starter.ml.data import process_data
 
 # ---------------------------------------------------------------------------
 # ML model unit tests — starter/ml/model.py
@@ -425,9 +427,8 @@ def test_create_access_token_contains_sub():
 
 
 # ---------------------------------------------------------------------------
-# Fairness analysis smoke tests — starter/fairness_analysis.py
+# Fairness analysis smoke tests — starter/ml/fairness_analysis.py
 # ---------------------------------------------------------------------------
-import json
 
 
 def test_fairness_analysis_runs_and_produces_outputs():
