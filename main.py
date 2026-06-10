@@ -36,13 +36,23 @@ _BASE = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(_BASE, "model", "model.pkl")
 ENCODER_PATH = os.path.join(_BASE, "model", "encoder.pkl")
 LB_PATH = os.path.join(_BASE, "model", "lb.pkl")
+# Lazy-loaded model artifacts (avoid heavy imports/load at import-time on Heroku)
+model = None
+encoder = None
+lb = None
 
-with open(MODEL_PATH, "rb") as f:
-    model = pickle.load(f)
-with open(ENCODER_PATH, "rb") as f:
-    encoder = pickle.load(f)
-with open(LB_PATH, "rb") as f:
-    lb = pickle.load(f)
+
+def _load_artifacts() -> None:
+    """Load model, encoder and label binarizer into module globals."""
+    global model, encoder, lb
+    if model is not None and encoder is not None and lb is not None:
+        return
+    with open(MODEL_PATH, "rb") as f:
+        model = pickle.load(f)
+    with open(ENCODER_PATH, "rb") as f:
+        encoder = pickle.load(f)
+    with open(LB_PATH, "rb") as f:
+        lb = pickle.load(f)
 
 CAT_FEATURES = [
     "workclass",
@@ -318,6 +328,9 @@ async def predict(
 
     Returns the predicted salary class: '>50K' or '<=50K'.
     """
+    # Ensure model artifacts are loaded (lazy-load to save memory on startup)
+    _load_artifacts()
+
     row = {
         "age": data.age,
         "workclass": data.workclass,
@@ -339,7 +352,6 @@ async def predict(
     X_cat = encoder.transform(df[CAT_FEATURES].values)
     X_cont = df.drop(CAT_FEATURES, axis=1).values
     X = np.concatenate([X_cont, X_cat], axis=1)
-
     pred = model.predict(X)
     label = lb.inverse_transform(pred)[0]
 
