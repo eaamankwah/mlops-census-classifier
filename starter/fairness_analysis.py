@@ -51,7 +51,6 @@ matplotlib.use("Agg")
 sns.set_theme(style="whitegrid", palette="muted")
 
 from starter.ml.data import process_data  # noqa: E402
-from starter.ml.model import inference, train_model  # noqa: E402
 from starter.train_model import clean_data  # noqa: E402
 
 # ---------------------------------------------------------------------------
@@ -96,8 +95,10 @@ def _save_fig(filename: str) -> None:
 def _get_preds(df: pd.DataFrame) -> np.ndarray:
     """Encode df (no label column) and return model predictions."""
     clean = df.drop(
-        columns=["salary", "pred_label", "true_label", "score",
-                  "label_value", "sex_bin", "race_bin", "sex_bin_f"],
+        columns=[
+            "salary", "pred_label", "true_label", "score",
+            "label_value", "sex_bin", "race_bin", "sex_bin_f",
+        ],
         errors="ignore",
     )
     X, _, _, _ = process_data(
@@ -228,8 +229,10 @@ def run_fairness_analysis() -> dict:
     _save_fig("fig_aequitas_metrics.png")
 
     # Fig 2 — Disparity ratios
-    disp_cols = [c for c in fdf.columns
-                 if "disparity" in c.lower() and fdf[c].notna().any()][:4]
+    disp_cols = [
+        c for c in fdf.columns
+        if "disparity" in c.lower() and fdf[c].notna().any()
+    ][:4]
     if disp_cols:
         fig, axes = plt.subplots(1, len(disp_cols),
                                   figsize=(14, 5), squeeze=False)
@@ -494,7 +497,6 @@ def run_fairness_analysis() -> dict:
     preds_sex = _get_preds(cf_sex)
     flip_sex = preds != preds_sex
     male_mask = test["sex"] == "Male"
-    female_mask = test["sex"] == "Female"
     flip_sex_pct = flip_sex.sum() / n * 100
     flip_up_sex = int(((preds == 0) & (preds_sex == 1) & male_mask).sum())
     flip_down_sex = int(((preds == 1) & (preds_sex == 0) & male_mask).sum())

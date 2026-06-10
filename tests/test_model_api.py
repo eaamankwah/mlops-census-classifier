@@ -7,15 +7,17 @@ Run with:
     pytest tests/ -v --cov=. --cov-report=term-missing
 """
 import os
-import pickle
 import tempfile
 
 import numpy as np
 import pandas as pd
 import pytest
 from fastapi.testclient import TestClient
+from jose import jwt
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
+
+from main import ALGORITHM, SECRET_KEY
 
 # ---------------------------------------------------------------------------
 # ML model unit tests — starter/ml/model.py
@@ -417,8 +419,6 @@ def test_authenticate_user_unknown():
 
 
 def test_create_access_token_contains_sub():
-    from jose import jwt
-    from main import ALGORITHM, SECRET_KEY
     token = create_access_token({"sub": "testuser"})
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     assert payload["sub"] == "testuser"

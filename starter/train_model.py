@@ -56,6 +56,7 @@ def clean_data():
     df.to_csv(DATA_PATH, index=False)
     print(f"Data cleaned: {len(df):,} rows written to {DATA_PATH}")
 
+
 cat_features = [
     "workclass",
     "education",
