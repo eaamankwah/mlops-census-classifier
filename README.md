@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏛️ Census Income Prediction API
+# Census Income Prediction API
 
 ### Deploying a Machine Learning Model on Heroku with FastAPI
 
@@ -25,7 +25,7 @@
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Reviewer Access](#-reviewer-access)
 - [Project Overview](#-project-overview)
@@ -51,7 +51,7 @@
 
 ---
 
-## 🔐 Reviewer Access
+##  Reviewer Access
 
 The `/predict` and `/users/me` endpoints require JWT authentication. Use these credentials to access everything:
 
@@ -90,7 +90,7 @@ curl -X POST https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/predict 
 
 ---
 
-## 🎯 Project Overview
+## Project Overview
 
 This project is **Project 3** of the [Udacity Machine Learning DevOps Engineer Nanodegree](https://www.udacity.com/course/machine-learning-dev-ops-engineer-nanodegree--nd0821). It demonstrates a complete MLOps lifecycle:
 
@@ -166,7 +166,7 @@ Point the API URL field to `http://127.0.0.1:8000`, log in with `alice` / `secre
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ### System Architecture Diagram
 
@@ -575,16 +575,16 @@ Live API:  https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com
 `frontend/index.html` is a self-contained single-page application — **no build tools, no npm, no framework**. Open it directly in any browser.
 
 **Features:**
-- 🔧 Configurable API base URL (local dev ↔ Heroku, no code changes)
-- 🔐 Step 1: Login form → calls `POST /token` → stores JWT in memory
-- 📋 Step 2: Full 14-field census form with dropdowns for all categorical features
-- ⚡ One-click sample data: **"Load >50K sample"** and **"Load ≤50K sample"**
-- 🎨 Color-coded results: green for `>50K`, amber for `<=50K`
-- 📦 Collapsible raw JSON response drawer
+-  Configurable API base URL (local dev ↔ Heroku, no code changes)
+-  Step 1: Login form → calls `POST /token` → stores JWT in memory
+-  Step 2: Full 14-field census form with dropdowns for all categorical features
+-  One-click sample data: **"Load >50K sample"** and **"Load ≤50K sample"**
+-  Color-coded results: green for `>50K`, amber for `<=50K`
+-  Collapsible raw JSON response drawer
 
 ---
 
-## 📊 Dataset
+## Dataset
 
 | Attribute | Value |
 |---|---|
@@ -605,7 +605,7 @@ Live API:  https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com
 
 ---
 
-## 📈 Model Performance
+## Model Performance
 
 ### Overall Test Set Metrics
 
@@ -651,7 +651,7 @@ Full slice metrics for all 8 categorical features are in [`slice_output.txt`](sl
 
 ---
 
-## 🔌 API Reference
+## API Reference
 
 ### `GET /`
 
@@ -735,7 +735,7 @@ python live_post.py
 
 ---
 
-## 🧪 Testing
+## Testing
 
 The test suite in `tests/test_model_api.py` covers **34 tests** across five groups:
 
@@ -777,7 +777,7 @@ The 2 uncovered lines are the `exit()` inside the Heroku `DYNO` startup block �
 
 ---
 
-## 🚀 Deployment Guide
+## Deployment Guide
 
 ### Step-by-step Heroku deployment
 
@@ -811,7 +811,7 @@ python live_post.py
 
 ---
 
-## ✨ Standout Features
+## Standout Features
 
 ### 1. Codecov Integration (99% Coverage)
 
@@ -852,7 +852,7 @@ A complete three-part fairness analysis was conducted and documented:
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feat/your-feature`
@@ -864,7 +864,7 @@ A complete three-part fairness analysis was conducted and documented:
 
 ---
 
-## ⚖️ Fairness & Bias Mitigation Analysis
+## Fairness & Bias Mitigation Analysis
 
 A comprehensive three-part fairness audit was conducted on the trained classifier using the [Aequitas](https://github.com/dssg/aequitas) and [AIF360](https://aif360.mybluemix.net/) toolkits plus custom counterfactual testing. Protected attributes: **sex** (reference: Male) and **race** (reference: White).
 
@@ -965,7 +965,7 @@ The 7:1 loss-to-gain ratio directly quantifies sex-based discrimination: changin
 
 The intersectional flip rate (7.0%) is less than the sum of individual rates (9.9%), confirming partial overlap — not full independence — of the two effects.
 
-> ⚠️ **Conclusion:** This model is **not counterfactually fair** with respect to sex or race. It must not be deployed in any system where sex or race should be irrelevant to the outcome (credit, employment, housing, social services).
+> **Conclusion:** This model is **not counterfactually fair** with respect to sex or race. It must not be deployed in any system where sex or race should be irrelevant to the outcome (credit, employment, housing, social services).
 
 ---
 
@@ -982,7 +982,7 @@ The intersectional flip rate (7.0%) is less than the sum of individual rates (9.
 | Counterfactual | Custom | 6.7% of White records flip when race changed | 🔴 High |
 | Intersectional | Custom | 7.0% flip with both sex+race changed | 🔴 High |
 
-## 📚 References
+## References
 
 - Becker, B. & Kohavi, R. (1996). [Adult — UCI ML Repository](https://doi.org/10.24432/C5XW20)
 - Breiman, L. (2001). [Random Forests. *Machine Learning*, 45(1), 5–32](https://doi.org/10.1023/A:1010933404324)
