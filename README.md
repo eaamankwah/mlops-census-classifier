@@ -509,7 +509,9 @@ Push to main
 
 **Setup Codecov:**
 1. Sign up at [codecov.io](https://codecov.io) and connect your GitHub repo
-2. Add `CODECOV_TOKEN` to **Settings → Secrets → Actions** in your GitHub repo
+2. If your organization still requires it, add `CODECOV_TOKEN` to **Settings → Secrets → Actions** in your GitHub repo
+   - Otherwise, no upload token is required for your org
+   - Admins can manage the [global upload token settings](https://app.codecov.io/account/github/eaamankwah/org-upload-token)
 3. Coverage badge auto-updates on every push
 
 ---
