@@ -92,7 +92,7 @@ curl -X POST https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/predict 
 
 ## Project Overview
 
-This project is **Project 3** of the [Udacity Machine Learning DevOps Engineer Nanodegree](https://www.udacity.com/course/machine-learning-dev-ops-engineer-nanodegree--nd0821). It demonstrates a complete MLOps lifecycle:
+This project is part of Udacity's Machine Learning DevOps Engineer Nanodegree. It demonstrates a complete MLOps lifecycle:
 
 | Stage | What's built |
 |---|---|
@@ -109,6 +109,7 @@ This project is **Project 3** of the [Udacity Machine Learning DevOps Engineer N
 > 2. **JWT Bearer authentication** on all prediction endpoints
 > 3. **Web frontend** UI for zero-friction model interaction
 
+A full analysis and discussions of the report is in [REPORT](doc/mlops_cencus_classifier_report.pdf)
 ---
 
 ## ⚡ Quick Start
@@ -340,47 +341,48 @@ flowchart TD
 ```
 mlops-census-classifier/
 │
-├── main.py                         # FastAPI app (GET /, POST /token, GET /users/me, POST /predict)
-├── live_post.py                    # Script to POST a sample record to the deployed API
-├── Procfile                        # Heroku: web dyno startup command
-├── runtime.txt                     # Heroku: Python 3.13.0
-├── requirements.txt                # Pinned Python dependencies
-├── setup.py                        # Editable package install
-├── .coveragerc                     # Coverage omit/exclude rules → 99% coverage
-├── model_card.md                   # Model documentation (data, metrics, ethics)
-├── slice_output.txt                # Per-category fairness evaluation results
+├── main.py                                 # FastAPI app (GET /, POST /token, GET /users/me, POST /predict)
+├── live_post.py                            # Script to POST a sample record to the deployed API
+├── Procfile                                # Heroku: web dyno startup command
+├── runtime.txt                             # Heroku: Python 3.13.0
+├── requirements.txt                        # Pinned Python dependencies
+├── setup.py                                # Editable package install
+├── .coveragerc                             # Coverage omit/exclude rules → 99% coverage
+├── model_card.md                           # Model documentation (data, metrics, ethics)
+├── slice_output.txt                        # Per-category fairness evaluation results
 │
-├── model/                          # Serialized ML artifacts (committed to Git)
-│   ├── model.pkl                   # Trained RandomForestClassifier
-│   ├── encoder.pkl                 # Fitted OneHotEncoder
-│   └── lb.pkl                      # Fitted LabelBinarizer
+├── model/                                  # Serialized ML artifacts (committed to Git)
+│   ├── model.pkl                           # Trained RandomForestClassifier
+│   ├── encoder.pkl                         # Fitted OneHotEncoder
+│   └── lb.pkl                              # Fitted LabelBinarizer
 │
 ├── starter/
-│   ├── train_model.py              # Full training script (clean → split → train → evaluate → save)
+│   ├── train_model.py                      # Full training script (clean → split → train → evaluate → save)
 │   └── ml/
-│       ├── data.py                 # process_data() — encoding + label binarization
-│       └── model.py                # train_model, inference, compute_model_metrics,
-│                                   # save_model, load_model, compute_slice_metrics
+│       ├── data.py                         # process_data() — encoding + label binarization
+│       └── model.py                        # train_model, inference, compute_model_metrics,
+│                                           # save_model, load_model, compute_slice_metrics
 │   └── data/
-│       ├── census.csv              # Raw dataset (whitespace in fields)
-│       └── census_clean.csv        # Cleaned dataset (whitespace stripped)
+│       ├── census.csv                      # Raw dataset (whitespace in fields)
+│       └── census_clean.csv                # Cleaned dataset (whitespace stripped)
 │
 ├── tests/
-│   └── test_model_api.py           # 34 tests · 99% line coverage
+│   └── test_model_api.py                   # 34 tests · 99% line coverage
 │
 ├── frontend/
-│   └── index.html                  # Single-page web app (no build tools required)
+│   └── index.html                          # Single-page web app (no build tools required)
 │
-├── screenshots/                    # Required rubric screenshots
+├── screenshots/                            # Required rubric screenshots
 │   ├── continuous_integration.png
 │   ├── continuous_deployment.png
 │   ├── example.png
 │   ├── live_get.png
 │   └── live_post.png
-│
+├── doc/
+│   └── mlops_cencus_classifier_report      # Project report
 └── .github/
     └── workflows/
-        └── ci.yml                  # GitHub Actions: lint → train → test → Codecov
+        └── ci.yml                          # GitHub Actions: lint → train → test → Codecov
 ```
 
 ---
@@ -793,7 +795,7 @@ heroku config:set SECRET_KEY=$(openssl rand -hex 32)
 - **Deploy tab** → **Deployment method** → **GitHub**
 - Search for your repo → **Connect**
 - Enable **Automatic Deploys**
-- Check ✅ **"Wait for CI to pass before deploy"**
+- Check  **"Wait for CI to pass before deploy"**
 
 ```bash
 # 4. Push to trigger CI → auto-deploy
@@ -998,7 +1000,7 @@ The intersectional flip rate (7.0%) is less than the sum of individual rates (9.
 
 <div align="center">
 
-**Udacity Machine Learning DevOps Engineer Nanodegree · Project 3**
+** Full project report : [REPORT](doc/mlops_cencus_classifier_report.pdf) **
 
 *Built with FastAPI · scikit-learn · GitHub Actions · Heroku · Codecov*
 
