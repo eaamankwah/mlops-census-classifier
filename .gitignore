@@ -40,4 +40,4 @@ fairness/*.csv
 # fairness/fairness_summary.json  <-- intentionally tracked
 
 # Model artifacts — DO commit these (Heroku needs them at startup)
-# model/*.pkl  <-- do NOT ignore
+# model/*.pkl  <-- do NOT ignore.coverage*
