@@ -109,7 +109,7 @@ This project is part of Udacity's Machine Learning DevOps Engineer Nanodegree. I
 > 2. **JWT Bearer authentication** on all prediction endpoints
 > 3. **Web frontend** UI for zero-friction model interaction
 
-A full analysis and discussions of the report is in [REPORT](doc/mlops_cencus_classifier_report.pdf)
+A full analysis and discussions of the report is in [REPORT](doc/mlops_census_classifier_report.pdf)
 ---
 
 ## ⚡ Quick Start
@@ -1000,7 +1000,7 @@ The intersectional flip rate (7.0%) is less than the sum of individual rates (9.
 
 <div align="center">
 
-** Full project report : [REPORT](doc/mlops_cencus_classifier_report.pdf) **
+** Full project report : [REPORT](doc/mlops_census_classifier_report.pdf) **
 
 *Built with FastAPI · scikit-learn · GitHub Actions · Heroku · Codecov*
 
