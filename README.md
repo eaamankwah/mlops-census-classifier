@@ -18,7 +18,7 @@
 
 </div>
 
-> 🔐 **Reviewer credentials** — the prediction endpoint requires authentication.
+> **Reviewer credentials** — the prediction endpoint requires authentication.
 > Username: `alice` &nbsp; Password: `secret`
 > On the `/docs` page click **Authorize 🔒**, enter the credentials, and all endpoints unlock.
 > Or: `POST /token` with `username=alice&password=secret` to get a Bearer token.
@@ -67,7 +67,7 @@ The `/predict` and `/users/me` endpoints require JWT authentication. Use these c
 1. Open `https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com/docs`
 2. Click **`POST /token`** → **Try it out** → fill `username=alice`, `password=secret` → **Execute**
 3. Copy the `access_token` value from the response
-4. Click the **Authorize 🔒** button at the top of the page → paste the token → **Authorize**
+4. Click the **Authorize ** button at the top of the page → paste the token → **Authorize**
 5. All protected endpoints are now unlocked for the rest of your session
 
 **Option B — curl:**
@@ -189,7 +189,7 @@ flowchart TD
     classDef outputNode    fill:#C62828,stroke:#B71C1C,color:#FFFFFF
 
     %% ── DATA LAYER ──────────────────────────────────────────────────────────
-    subgraph DATA["📦  Data Layer"]
+    subgraph DATA["  Data Layer"]
         direction TB
         D1(["census.csv\n32,561 rows"]):::dataNode
         D2["Whitespace\nCleaning\nsed strip"]:::prepNode
@@ -338,7 +338,7 @@ flowchart TD
 ### Repository Structure
 
 ```
-census-income-api/
+mlops-census-classifier/
 │
 ├── main.py                         # FastAPI app (GET /, POST /token, GET /users/me, POST /predict)
 ├── live_post.py                    # Script to POST a sample record to the deployed API
@@ -645,7 +645,7 @@ Live API:  https://mlops-census-eaamankwah-8cb731658ffd.herokuapp.com
 | Black | 599 | 0.7273 | 0.6154 | 0.6667 |
 | Amer-Indian-Eskimo | 71 | 0.6250 | 0.5000 | 0.5556 |
 
-> ⚠️ **Ethical note:** Performance disparities across sex and race reflect historical socioeconomic inequalities in the 1994 training data. This model must **not** be used in real hiring, lending, or eligibility decisions. See [`model_card.md`](model_card.md) for full ethical documentation.
+> **Ethical note:** Performance disparities across sex and race reflect historical socioeconomic inequalities in the 1994 training data. This model must **not** be used in real hiring, lending, or eligibility decisions. See [`model_card.md`](model_card.md) for full ethical documentation.
 
 Full slice metrics for all 8 categorical features are in [`slice_output.txt`](slice_output.txt).
 
